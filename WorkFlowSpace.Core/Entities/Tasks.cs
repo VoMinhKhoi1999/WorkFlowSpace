@@ -18,5 +18,6 @@ namespace WorkFlowSpace.Core.Entities
 
         //FK
         public int TabId { get; set; }
+        public virtual Tabs Tab { get; set; }
     }
 }

@@ -15,10 +15,6 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
     <ItemGroup>
     <ProjectReference Include="..\WorlFlowSpace.infrastructure\WorkFlowSpace.infrastructure.csproj" />
   </ItemGroup>

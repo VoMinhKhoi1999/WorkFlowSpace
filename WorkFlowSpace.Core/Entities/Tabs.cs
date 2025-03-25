@@ -16,6 +16,7 @@ namespace WorkFlowSpace.Core.Entities
 
         //FK
         public int GroupId { get; set; }
-        public virtual ICollection<Groups> Groups { get; set; } = new HashSet<Groups>();
+        public virtual Groups Group { get; set; }
+        public virtual ICollection<Tasks> Tasks { get; set; } = new HashSet<Tasks>();
     }
 }
