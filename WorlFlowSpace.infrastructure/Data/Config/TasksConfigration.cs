@@ -20,6 +20,9 @@ namespace WorkFlowSpace.infrastructure.Data.Config
             builder.Property(x => x.BeginDate).HasColumnType("DateTime");
             builder.Property(x => x.EndDate).HasColumnType("DateTime");
             builder.Property(x => x.Status).HasColumnType("int");
+            builder.Property(x => x.CreateBy).HasMaxLength(200);
+            builder.Property(x => x.CreateAt).HasColumnType("DateTime");
+            builder.Property(x => x.ModifiDate).HasColumnType("DateTime");
 
             //builder.HasData(
             //    new Tasks { Id = 1

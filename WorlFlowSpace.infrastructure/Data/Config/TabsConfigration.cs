@@ -17,6 +17,7 @@ namespace WorkFlowSpace.infrastructure.Data.Config
             builder.Property(x => x.Name).HasMaxLength(200);
             builder.Property(x => x.CreateBy).HasColumnType("int");
             builder.Property(x => x.CreateAt).HasColumnType("DateTime");
+            builder.Property(x => x.ModifiDate).HasColumnType("DateTime");
 
             //builder.HasData(
             //    new Tabs { Id = 1

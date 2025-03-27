@@ -30,14 +30,14 @@ namespace WorkFlowSpace.infrastructure.Repository
 
         public async Task<IEnumerable<T>> GetAllAsync(params Expression<Func<T, bool>>[] includes)
         {
-            var query = _context.Set<T>().AsQueryable();
+            var result = _context.Set<T>().AsQueryable();
 
             foreach (var item in includes)
             {
-                query = query.Include(item);
+                result = result.Include(item);
             }
 
-            return await query.ToListAsync();
+            return await result.ToListAsync();
         }
 
         public async Task<T> GetAsync(T id) => await _context.Set<T>().FindAsync(id);
@@ -46,14 +46,14 @@ namespace WorkFlowSpace.infrastructure.Repository
 
         public async Task<T> GetByIdAsync(T id, params Expression<Func<T, bool>>[] includes)
         {
-            IQueryable<T> query = _context.Set<T>();
+            IQueryable<T> result = _context.Set<T>();
 
             foreach (var item in includes)
             {
-                query = query.Include(item);
+                result = result.Include(item);
             }
 
-            return await ((DbSet<T>)query).FindAsync(id);
+            return await ((DbSet<T>)result).FindAsync(id);
         }
         #endregion
 
@@ -64,11 +64,11 @@ namespace WorkFlowSpace.infrastructure.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(T id, T entity)
+        public async Task UpdateAsync(int id, T entity)
         {
-            var entity_value = await _context.Set<T>().FindAsync(id);
+            var result = await _context.Set<T>().FindAsync(id);
 
-            if (entity_value is not null)
+            if (result is not null)
             {
                 _context.Update(entity);
 
@@ -76,13 +76,16 @@ namespace WorkFlowSpace.infrastructure.Repository
             }
         }
 
-        public async Task DeleteAsync(T id)
+        public async Task DeleteAsync(int id)
         {
-            var entity = _context.Set<T>().FindAsync(id);
+            var result = await _context.Set<T>().FindAsync(id);
 
-            _context.Remove(entity);
+            if (result is not null)
+            {
+                _context.Remove(result);
 
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+            }
         }
         #endregion
     }
