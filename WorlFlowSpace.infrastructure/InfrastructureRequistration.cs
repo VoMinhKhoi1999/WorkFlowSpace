@@ -17,6 +17,7 @@ namespace WorkFlowSpace.infrastructure
         public static IServiceCollection InfrastructureConfigration (this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             //services.AddScoped<IGroupsRepository, GroupsRepository>();
             //services.AddScoped<ITabsRepository, TabsRepository>();
             //services.AddScoped<ITasksRepository, TasksRepository>();

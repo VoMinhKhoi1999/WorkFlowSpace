@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WorkFlowSpace.API.Sys;
+using WorkFlowSpace.Core.Entities;
 using WorkFlowSpace.Core.Interface;
+using WorkFlowSpace.infrastructure.Data.DTO;
 
 namespace WorkFlowSpace.API.Controllers
 {
@@ -30,22 +33,136 @@ namespace WorkFlowSpace.API.Controllers
                     return Ok(result);
                 }
 
-                return BadRequest("Not found data.");
+                return BadRequest(SYS_Extensions.MessNotFound());
             }
             catch (Exception ex)
             {
-                return BadRequest("Not found.\nError detail: " + ex.ToString());
+                return BadRequest(SYS_Extensions.MessNotFound(ex));
             }
         }
 
-        //[HttpGet("get-by-id-tabs{/id}")]
-        //public Task<ActionResult> Get(int id)
-        //{
-        //    return Ok();
-        //}
+        [HttpGet("get-by-id-tabs{/id}")]
+        public async Task<ActionResult> Get(int id)
+        {
+            try
+            {
+                var result = await _uow.TabsRepository.GetAsync(id);
+
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+
+                return BadRequest(SYS_Extensions.MessNotFound(id.ToString()));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(SYS_Extensions.MessNotFound(ex));
+            }
+        }
         #endregion
 
         #region change data
+        [HttpPost("add-tabs")]
+        public async Task<ActionResult> Add(TabsDTO tab)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var checkGroup = await _uow.GroupsRepository.GetAsync(tab.GroupId);
+
+                    if(checkGroup != null)
+                    {
+                        var result = new Tabs();
+                        result.Name = tab.Name;
+                        result.GroupId = tab.GroupId;
+                        result.CreateBy = tab.CreateBy;
+
+                        await _uow.TabsRepository.AddAsync(result);
+
+                        return Ok(SYS_Extensions.MessSuccess(result.Name, "Add"));
+                    }
+
+                    return BadRequest(SYS_Extensions.MessNotFound("groups " + tab.GroupId));
+                }
+
+                return BadRequest(SYS_Extensions.MessNotFound());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(SYS_Extensions.MessNotFound(ex));
+            }
+        }
+
+        [HttpPut("update-tabs{id/}")]
+        public async Task<ActionResult> Update(int id, TabsDTO tab)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var checkTab = await _uow.TabsRepository.GetAsync(id);
+
+                    if (checkTab != null)
+                    {
+                        if (checkTab.GroupId != tab.GroupId)
+                        {
+                            var checkGroup = await _uow.TabsRepository.GetAsync(id);
+
+                            if (checkTab != null)
+                            {
+                                return BadRequest(SYS_Extensions.MessNotFound("group " + tab.GroupId));
+                            }
+                        }
+
+                        var result = new Tabs();
+                        result.Name = tab.Name;
+                        result.GroupId = tab.GroupId;
+                        result.CreateBy = tab.CreateBy;
+
+                        await _uow.TabsRepository.AddAsync(result);
+
+                        return Ok(SYS_Extensions.MessSuccess(id.ToString(), "Upd"));
+                    }
+
+                    return BadRequest(SYS_Extensions.MessNotFound("tabs " + id));
+                }
+
+                return BadRequest(SYS_Extensions.MessNotFound());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(SYS_Extensions.MessNotFound(ex));
+            }
+        }
+
+        [HttpDelete("delete-tabs{id/}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var result = await _uow.GroupsRepository.GetAsync(id);
+
+                    if (result != null)
+                    {
+                        await _uow.TabsRepository.DeleteAsync(result.Id);
+
+                        return Ok(SYS_Extensions.MessSuccess(result.Name, "Add"));
+                    }
+
+                    return BadRequest(SYS_Extensions.MessNotFound("groups " + result.Name));
+                }
+
+                return BadRequest(SYS_Extensions.MessNotFound());
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(SYS_Extensions.MessNotFound(ex));
+            }
+        }
         #endregion
     }
 }

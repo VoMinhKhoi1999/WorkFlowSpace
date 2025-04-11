@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using WorkFlowSpace.Core.Entities;
 using WorkFlowSpace.Core.Interface;
 using WorkFlowSpace.infrastructure.Data.DTO;
+using WorkFlowSpace.API.Sys;
 
 namespace WorkFlowSpace.API.Controllers
 {
@@ -34,11 +35,11 @@ namespace WorkFlowSpace.API.Controllers
                     return Ok(result);
                 }
 
-                return BadRequest("Not found data.");
+                return BadRequest(SYS_Extensions.MessNotFound());
             }
             catch (Exception ex)
             {
-                return BadRequest("Not found.\nError detail: " + ex.ToString());
+                return BadRequest(SYS_Extensions.MessNotFound(ex));
             }
         }
 
@@ -47,18 +48,18 @@ namespace WorkFlowSpace.API.Controllers
         {
             try
             {
-                var result = _uow.GroupsRepository.GetAsync(id);
+                var result = await _uow.GroupsRepository.GetAsync(id);
 
                 if (result != null)
                 {
                     return Ok(result);
                 }
 
-                return BadRequest($"Not found this id = [{id}].");
+                return BadRequest(SYS_Extensions.MessNotFound(id.ToString()));
             }
             catch (Exception ex)
             {
-                return BadRequest("Not found.\nError detail: " + ex.ToString());
+                return BadRequest(SYS_Extensions.MessNotFound(ex));
             }
         }
         #endregion
@@ -78,14 +79,15 @@ namespace WorkFlowSpace.API.Controllers
                     result.ModifiDate = DateTime.Now;
 
                     await _uow.GroupsRepository.AddAsync(result);
-                    return Ok($"Group [{result.Name}] is created!");
+
+                    return Ok(SYS_Extensions.MessSuccess(result.Name, "Add"));
                 }
 
-                return BadRequest("Not found");
+                return BadRequest(SYS_Extensions.MessNotFound());
             }
             catch(Exception ex)
             {
-                return BadRequest("Not found.\nError detail: " + ex.ToString());
+                return BadRequest(SYS_Extensions.MessNotFound(ex));
             }
         }
 
@@ -105,14 +107,15 @@ namespace WorkFlowSpace.API.Controllers
                     }
 
                     await _uow.GroupsRepository.UpdateAsync(id, result);
-                    return Ok($"Group [{result.Id}] is updated!");
+
+                    return Ok(SYS_Extensions.MessSuccess(id.ToString(), "Upd"));
                 }
 
-                return BadRequest($"Group [{id}] is not found.");
+                return BadRequest(SYS_Extensions.MessNotFound(id.ToString()));
             }
             catch (Exception ex)
             {
-                return BadRequest("Not found.\nError detail: " + ex.ToString());
+                return BadRequest(SYS_Extensions.MessNotFound(ex));
             }
         }
 
@@ -128,15 +131,16 @@ namespace WorkFlowSpace.API.Controllers
                     if (result != null)
                     {
                         await _uow.GroupsRepository.DeleteAsync(id);
-                        return Ok($"Group [{result.Name}] is deleted!");
+
+                        return Ok(SYS_Extensions.MessSuccess(result.Name, "Del"));
                     }
                 }
 
-                return BadRequest($"Group [{id}] is not found.");
+                return BadRequest(SYS_Extensions.MessNotFound(id.ToString()));
             }
             catch (Exception ex)
             {
-                return BadRequest("Not found.\nError detail: " + ex.ToString());
+                return BadRequest(SYS_Extensions.MessNotFound(ex));
             }
         }
         #endregion
