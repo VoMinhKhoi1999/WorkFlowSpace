@@ -84,7 +84,7 @@ namespace WorkFlowSpace.API.Controllers
                         return Ok(SYS_Extensions.MessSuccess(result.Name, "Add"));
                     }
 
-                    return BadRequest(SYS_Extensions.MessNotFound("groups " + tab.GroupId));
+                    return BadRequest(SYS_Extensions.MessNotFound("group " + tab.GroupId));
                 }
 
                 return BadRequest(SYS_Extensions.MessNotFound());
@@ -108,9 +108,9 @@ namespace WorkFlowSpace.API.Controllers
                     {
                         if (checkTab.GroupId != tab.GroupId)
                         {
-                            var checkGroup = await _uow.TabsRepository.GetAsync(id);
+                            var checkGroup = await _uow.GroupsRepository.GetAsync(tab.GroupId);
 
-                            if (checkTab != null)
+                            if (checkGroup == null)
                             {
                                 return BadRequest(SYS_Extensions.MessNotFound("group " + tab.GroupId));
                             }
@@ -126,7 +126,7 @@ namespace WorkFlowSpace.API.Controllers
                         return Ok(SYS_Extensions.MessSuccess(id.ToString(), "Upd"));
                     }
 
-                    return BadRequest(SYS_Extensions.MessNotFound("tabs " + id));
+                    return BadRequest(SYS_Extensions.MessNotFound("tab " + id));
                 }
 
                 return BadRequest(SYS_Extensions.MessNotFound());
@@ -144,16 +144,16 @@ namespace WorkFlowSpace.API.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var result = await _uow.GroupsRepository.GetAsync(id);
+                    var result = await _uow.TabsRepository.GetAsync(id);
 
                     if (result != null)
                     {
                         await _uow.TabsRepository.DeleteAsync(result.Id);
 
-                        return Ok(SYS_Extensions.MessSuccess(result.Name, "Add"));
+                        return Ok(SYS_Extensions.MessSuccess(result.Name, "Del"));
                     }
 
-                    return BadRequest(SYS_Extensions.MessNotFound("groups " + result.Name));
+                    return BadRequest(SYS_Extensions.MessNotFound("tab " + result.Name));
                 }
 
                 return BadRequest(SYS_Extensions.MessNotFound());
