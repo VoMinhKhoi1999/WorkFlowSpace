@@ -19,6 +19,6 @@ namespace WorkFlowSpace.infrastructure.Data.DTO
         [Required]
         public int CreateBy { get; set; }
         [Required]
-        public int TabID { get; set; }
+        public int TabId { get; set; }
     }
 }
