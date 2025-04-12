@@ -41,7 +41,7 @@ namespace WorkFlowSpace.API.Controllers
             }
         }
 
-        [HttpGet("get-by-id-tabs{/id}")]
+        [HttpGet("get-by-id-tabs/{id}")]
         public async Task<ActionResult> Get(int id)
         {
             try
@@ -95,7 +95,7 @@ namespace WorkFlowSpace.API.Controllers
             }
         }
 
-        [HttpPut("update-tabs{id/}")]
+        [HttpPut("update-tabs/{id}")]
         public async Task<ActionResult> Update(int id, TabsDTO tab)
         {
             try
@@ -137,7 +137,7 @@ namespace WorkFlowSpace.API.Controllers
             }
         }
 
-        [HttpDelete("delete-tabs{id/}")]
+        [HttpDelete("delete-tabs/{id}")]
         public async Task<ActionResult> Delete(int id)
         {
             try
