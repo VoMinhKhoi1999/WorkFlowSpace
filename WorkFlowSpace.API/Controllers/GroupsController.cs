@@ -83,7 +83,7 @@ namespace WorkFlowSpace.API.Controllers
                     return Ok(SYS_Extensions.MessSuccess(result.Name, "Add"));
                 }
 
-                return BadRequest(SYS_Extensions.MessNotFound());
+                return BadRequest();
             }
             catch(Exception ex)
             {
@@ -104,14 +104,16 @@ namespace WorkFlowSpace.API.Controllers
                     {
                         result.Name = groups.Name;
                         result.ModifiDate = DateTime.Now;
+
+                        await _uow.GroupsRepository.UpdateAsync(id, result);
+
+                        return Ok(SYS_Extensions.MessSuccess(id.ToString(), "Upd"));
                     }
 
-                    await _uow.GroupsRepository.UpdateAsync(id, result);
-
-                    return Ok(SYS_Extensions.MessSuccess(id.ToString(), "Upd"));
+                    return Ok(SYS_Extensions.MessNotFound("group " + id));
                 }
 
-                return BadRequest(SYS_Extensions.MessNotFound(id.ToString()));
+                return BadRequest();
             }
             catch (Exception ex)
             {
@@ -134,9 +136,11 @@ namespace WorkFlowSpace.API.Controllers
 
                         return Ok(SYS_Extensions.MessSuccess(result.Name, "Del"));
                     }
+
+                    return BadRequest(SYS_Extensions.MessNotFound(id.ToString()));
                 }
 
-                return BadRequest(SYS_Extensions.MessNotFound(id.ToString()));
+                return BadRequest();
             }
             catch (Exception ex)
             {

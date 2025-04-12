@@ -87,7 +87,7 @@ namespace WorkFlowSpace.API.Controllers
                     return BadRequest(SYS_Extensions.MessNotFound("group " + tab.GroupId));
                 }
 
-                return BadRequest(SYS_Extensions.MessNotFound());
+                return BadRequest();
             }
             catch (Exception ex)
             {
@@ -129,7 +129,7 @@ namespace WorkFlowSpace.API.Controllers
                     return BadRequest(SYS_Extensions.MessNotFound("tab " + id));
                 }
 
-                return BadRequest(SYS_Extensions.MessNotFound());
+                return BadRequest();
             }
             catch (Exception ex)
             {
@@ -156,7 +156,7 @@ namespace WorkFlowSpace.API.Controllers
                     return BadRequest(SYS_Extensions.MessNotFound("tab " + result.Name));
                 }
 
-                return BadRequest(SYS_Extensions.MessNotFound());
+                return BadRequest();
             }
             catch (Exception ex)
             {
