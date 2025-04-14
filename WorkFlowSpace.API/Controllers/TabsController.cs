@@ -20,7 +20,7 @@ namespace WorkFlowSpace.API.Controllers
         }
         #endregion
 
-        #region get
+        #region get data
         [HttpGet("get-all-tabs")]
         public async Task<ActionResult> Get()
         {
@@ -72,19 +72,23 @@ namespace WorkFlowSpace.API.Controllers
                 {
                     var checkGroup = await _uow.GroupsRepository.GetAsync(tab.GroupId);
 
-                    if(checkGroup != null)
+                    if (checkGroup != null)
                     {
-                        var result = new Tabs();
+                        Tabs result = new Tabs();
+
                         result.Name = tab.Name;
-                        result.GroupId = tab.GroupId;
                         result.CreateBy = tab.CreateBy;
+                        result.CreateAt = DateTime.Now;
+
+                        result.ModifiDate = DateTime.Now;
+                        result.GroupId = tab.GroupId;
 
                         await _uow.TabsRepository.AddAsync(result);
 
                         return Ok(SYS_Extensions.MessSuccess(result.Name, "Add"));
                     }
 
-                    return BadRequest(SYS_Extensions.MessNotFound("group " + tab.GroupId));
+                    return BadRequest(SYS_Extensions.MessNotFound("group " + tab.GroupId.ToString()));
                 }
 
                 return BadRequest();
@@ -102,31 +106,30 @@ namespace WorkFlowSpace.API.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var checkTab = await _uow.TabsRepository.GetAsync(id);
+                    var result = await _uow.TabsRepository.GetAsync(id);
 
-                    if (checkTab != null)
+                    if (result != null)
                     {
-                        if (checkTab.GroupId != tab.GroupId)
+                        if (result.GroupId != tab.GroupId)
                         {
                             var checkGroup = await _uow.GroupsRepository.GetAsync(tab.GroupId);
 
                             if (checkGroup == null)
                             {
-                                return BadRequest(SYS_Extensions.MessNotFound("group " + tab.GroupId));
+                                return BadRequest(SYS_Extensions.MessNotFound("group " + tab.GroupId.ToString()));
                             }
                         }
 
-                        var result = new Tabs();
                         result.Name = tab.Name;
+                        result.ModifiDate = DateTime.Now;
                         result.GroupId = tab.GroupId;
-                        result.CreateBy = tab.CreateBy;
 
-                        await _uow.TabsRepository.AddAsync(result);
+                        await _uow.TabsRepository.UpdateAsync(id, result);
 
-                        return Ok(SYS_Extensions.MessSuccess(id.ToString(), "Upd"));
+                        return Ok(SYS_Extensions.MessSuccess(result.Name, "Upd"));
                     }
 
-                    return BadRequest(SYS_Extensions.MessNotFound("tab " + id));
+                    return BadRequest(SYS_Extensions.MessNotFound("tab " + id.ToString()));
                 }
 
                 return BadRequest();
@@ -153,7 +156,7 @@ namespace WorkFlowSpace.API.Controllers
                         return Ok(SYS_Extensions.MessSuccess(result.Name, "Del"));
                     }
 
-                    return BadRequest(SYS_Extensions.MessNotFound("tab " + result.Name));
+                    return BadRequest(SYS_Extensions.MessNotFound("tab " + id.ToString()));
                 }
 
                 return BadRequest();

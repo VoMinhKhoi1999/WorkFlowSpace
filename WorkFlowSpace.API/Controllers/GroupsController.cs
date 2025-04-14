@@ -22,7 +22,7 @@ namespace WorkFlowSpace.API.Controllers
         }
         #endregion
 
-        #region get
+        #region get data
         [HttpGet("get-all-groups")]
         public async Task<ActionResult> Get()
         {
@@ -72,10 +72,12 @@ namespace WorkFlowSpace.API.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var result = new Groups();
+                    Groups result = new Groups();
+
                     result.Name = groups.Name;
                     result.CreateBy = groups.CreateBy;
                     result.CreateAt = DateTime.Now;
+
                     result.ModifiDate = DateTime.Now;
 
                     await _uow.GroupsRepository.AddAsync(result);
@@ -85,7 +87,7 @@ namespace WorkFlowSpace.API.Controllers
 
                 return BadRequest();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(SYS_Extensions.MessNotFound(ex));
             }
@@ -107,10 +109,10 @@ namespace WorkFlowSpace.API.Controllers
 
                         await _uow.GroupsRepository.UpdateAsync(id, result);
 
-                        return Ok(SYS_Extensions.MessSuccess(id.ToString(), "Upd"));
+                        return Ok(SYS_Extensions.MessSuccess(result.Name, "Upd"));
                     }
 
-                    return Ok(SYS_Extensions.MessNotFound("group " + id));
+                    return Ok(SYS_Extensions.MessNotFound("group " + id.ToString()));
                 }
 
                 return BadRequest();
@@ -137,7 +139,7 @@ namespace WorkFlowSpace.API.Controllers
                         return Ok(SYS_Extensions.MessSuccess(result.Name, "Del"));
                     }
 
-                    return BadRequest(SYS_Extensions.MessNotFound(id.ToString()));
+                    return BadRequest(SYS_Extensions.MessNotFound("group " + id.ToString()));
                 }
 
                 return BadRequest();

@@ -10,9 +10,11 @@ namespace WorkFlowSpace.Core.Entities
     {
         //Var
         public int Id { get; set; }
+
         public string Name { get; set; } = "";
         public int CreateBy { get; set; } //Sau này thêm class user
         public DateTime CreateAt { get; set; }
+
         public DateTime ModifiDate { get; set; }
 
         public virtual ICollection<Tabs> Tabs { get; set; } = new HashSet<Tabs>();
